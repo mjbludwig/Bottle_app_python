@@ -1,3 +1,4 @@
+
 from bottle import *
 import os
 import re
@@ -11,6 +12,7 @@ def mainPage():
 @app.post('/groups')
 def checkGroup():
     groups = open('Groups', 'r')
+    global nameToCheck
     nameToCheck = str(request.forms.get('groupName'))
     if nameToCheck == "":
         return template('mainPage.tpl') + '<p>Please enter a name in the field</p>'
@@ -21,14 +23,11 @@ def checkGroup():
         if nameToCheck == str(pGroupName):
             global userNames
             userNames = fields[3].split(',')
-            nameString = ""
-            for names in userNames[:-1]:
-                nameString = nameString + names + ", "
-                if userNames.count(', ') < 1:
-                    nameString = "<p> There are no users in the %s group" % nameToCheck
-                    return template('groupPage.tpl', groupName=nameToCheck, printUsers=nameString)
-
-            return template('groupPage.tpl', groupName=nameToCheck, printUsers=nameString)
+            if len(userNames) < 1:
+                return template('mainPage.tpl') + '<p>There are no Users in that group, additions need to be handled administratively.</p>'
+            global nameString
+            nameString = ", ".join(userNames)
+            return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames)
     return template('mainPage.tpl') + '<p>That group does not exist, try again</p>'
 
 @app.post('/changes')
@@ -42,6 +41,10 @@ def makeChange():
         return template('groupChange.tpl'), "<h1> Page Coming Soon!</h1>"
     elif noRadio == "noRad":
         return template('mainPage.tpl')
+    else:
+        global nameToCheck
+        global nameString
+        return template('groupPage.tpl', groupName=nameToCheck, printUsers=nameString) + "<p> Please select and option </p>"
 
 
 
