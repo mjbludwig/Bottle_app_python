@@ -33,19 +33,13 @@ def checkGroup():
 
 @app.post('/changes')
 def makeChange():
-    yesRadio = request.forms.get('yes')
-    noRadio = request.forms.get('no')
-    if yesRadio == "yesRad":
-        for names in userNames:
-            a = 1
-
+    if request.forms.get('radioYesNo') == "yes":
         return template('groupChange.tpl', printUsers=userNames)
-    elif noRadio == "noRad":
+    elif request.forms.get('radioYesNo') == "no":
         return template('mainPage.tpl')
     else:
         global nameToCheck
-        global nameString
-        return template('groupPage.tpl', groupName=nameToCheck, printUsers=nameString) + "<p> Please select and option </p>"
+        return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames) + "<p> Please select and option </p>"
 
 @app.post('/changes-made')
 def implementChanges():
@@ -59,7 +53,7 @@ def implementChanges():
             usersToSuspend.append(user)
         elif request.forms.get(user) == "delete":
             usersToDelete.append(user)
-    return str(usersToDelete), str(usersToSuspend), str(usersToDeleteAll)
+
 
 
 

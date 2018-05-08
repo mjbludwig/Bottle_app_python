@@ -28,7 +28,7 @@
 
 <p>would you like to make a change?</p>
 <form action="/changes" method="post">
-	<input type="radio" name="yes" value="yesRad">yes<br>
-	<input type="radio" name="no" value="noRad">no<br><br>
+	<input type="radio" name="radioYesNo" value="yes"/>yes<br>
+	<input type="radio" name="radioYesNo" value="no" checked="checked"/>no<br><br>
 	<input type="submit" name="submit" value="submit"><br>
 </form>
