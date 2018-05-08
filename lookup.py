@@ -22,12 +22,13 @@ def checkGroup():
         pGroupName = fields[0]
         if nameToCheck == str(pGroupName):
             global userNames
-            userNames = fields[3].split(',')
-            if len(userNames) < 1:
+            userNames = (fields[3].strip()).split(',')
+            #return str(userNames)
+            if len(userNames) <= 1:
                 return template('mainPage.tpl') + '<p>There are no Users in that group, additions need to be handled administratively.</p>'
-            global nameString
-            nameString = ", ".join(userNames)
-            return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames)
+            else:
+                userNames.sort()
+                return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames)
     return template('mainPage.tpl') + '<p>That group does not exist, try again</p>'
 
 @app.post('/changes')
@@ -38,13 +39,29 @@ def makeChange():
         for names in userNames:
             a = 1
 
-        return template('groupChange.tpl'), "<h1> Page Coming Soon!</h1>"
+        return template('groupChange.tpl', printUsers=userNames)
     elif noRadio == "noRad":
         return template('mainPage.tpl')
     else:
         global nameToCheck
         global nameString
         return template('groupPage.tpl', groupName=nameToCheck, printUsers=nameString) + "<p> Please select and option </p>"
+
+@app.post('/changes-made')
+def implementChanges():
+    usersToDeleteAll = []
+    usersToSuspend = []
+    usersToDelete = []
+    for user in userNames:
+        if request.forms.get(user) == "deleteAll":
+            usersToDeleteAll.append(user)
+        elif request.forms.get(user) == "suspend":
+            usersToSuspend.append(user)
+        elif request.forms.get(user) == "delete":
+            usersToDelete.append(user)
+    return str(usersToDelete), str(usersToSuspend), str(usersToDeleteAll)
+
+
 
 
 

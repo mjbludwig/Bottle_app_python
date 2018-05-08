@@ -4,18 +4,18 @@
 .wrapper {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-gap: 10px;
-    grid-auto-rows: minmax(40px, auto)
+    grid-gap: 5px;
+    grid-auto-rows: minmax(auto, auto)
 }
 .wrapper > div {
     border: 4px solid #1B8422;
-    border-radius: 10px;
+    border-radius: 2px;
     background-color: #7EEF86;
     color: #113F23;
     text-align: center;
     font-size: 1em;
     font-weight: bold;
-    padding: 10px;
+    padding: 4px;
 
 }
 </style>
