@@ -1,13 +1,21 @@
 
+from bottle import route, run, static_file
 from bottle import *
+import bottle
 import os
 import re
 
 app = Bottle()
+mghpccImg = '/images/mghpccImg.jpg'
+
+@app.route('/images/<filename>')
+def images(filename):
+    return bottle.static_file(filename, root=os.path.join(os.getcwd(), 'static/images'))
 
 @app.route('/')
 def mainPage():
-    return template('mainPage.tpl')
+    return template('mainPage.tpl', backGround=mghpccImg, error="")
+
 
 @app.post('/groups')
 def checkGroup():
@@ -15,7 +23,7 @@ def checkGroup():
     global nameToCheck
     nameToCheck = str(request.forms.get('groupName'))
     if nameToCheck == "":
-        return template('mainPage.tpl') + '<p>Please enter a name in the field</p>'
+        return template('mainPage.tpl', backGround=mghpccImg, error="noName")
 
     for line in groups:
         fields = line.split(":")
@@ -25,21 +33,20 @@ def checkGroup():
             userNames = (fields[3].strip()).split(',')
             #return str(userNames)
             if len(userNames) <= 1:
-                return template('mainPage.tpl') + '<p>There are no Users in that group, additions need to be handled administratively.</p>'
+                return template('mainPage.tpl', backGround=mghpccImg, error="noUsers")
             else:
                 userNames.sort()
-                return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames)
-    return template('mainPage.tpl') + '<p>That group does not exist, try again</p>'
-
+                return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames, backGround=mghpccImg)
+    return template('mainPage.tpl', backGround=mghpccImg, error="noGroup")
 @app.post('/changes')
 def makeChange():
     if request.forms.get('radioYesNo') == "yes":
-        return template('groupChange.tpl', printUsers=userNames)
+        return template('groupChange.tpl', printUsers=userNames, backGround=mghpccImg)
     elif request.forms.get('radioYesNo') == "no":
-        return template('mainPage.tpl')
+        return template('mainPage.tpl', backGround=mghpccImg, error="")
     else:
         global nameToCheck
-        return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames) + "<p> Please select and option </p>"
+        return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames, backGround=mghpccImg) + "<p> Please select and option </p>"
 
 @app.post('/changes-made')
 def implementChanges():
