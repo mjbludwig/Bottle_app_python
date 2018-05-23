@@ -38,7 +38,7 @@ def checkGroup():
                 userNames.sort()
                 return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames, backGround=mghpccImg)
     return template('mainPage.tpl', backGround=mghpccImg, error="noGroup")
-@app.post('/changes')
+@app.post('/groups/changes')
 def makeChange():
     if request.forms.get('radioYesNo') == "yes":
         return template('groupChange.tpl', printUsers=userNames, backGround=mghpccImg)
@@ -46,13 +46,14 @@ def makeChange():
         return template('mainPage.tpl', backGround=mghpccImg, error="")
     else:
         global nameToCheck
-        return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames, backGround=mghpccImg) + "<p> Please select and option </p>"
+        return template('groupPage.tpl', groupName=nameToCheck, printUsers=userNames, backGround=mghpccImg) #+ "<p> Please select and option </p>"
 
-@app.post('/changes-made')
+@app.post('/groups/changes/changes-made')
 def implementChanges():
     usersToDeleteAll = []
     usersToSuspend = []
     usersToDelete = []
+    global userNames
     for user in userNames:
         if request.forms.get(user) == "deleteAll":
             usersToDeleteAll.append(user)
@@ -60,8 +61,11 @@ def implementChanges():
             usersToSuspend.append(user)
         elif request.forms.get(user) == "delete":
             usersToDelete.append(user)
+    return template('changes-made.tpl', backGround=mghpccImg, deleteAll=usersToDeleteAll, delete=usersToDelete, suspend=usersToSuspend)
 
-
+@app.post('/group/changes/changes-made/submit')
+def submitChanges():
+    return template('submit.tpl', backGround=mghpccImg)
 
 
 

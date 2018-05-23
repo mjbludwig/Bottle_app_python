@@ -124,7 +124,7 @@ body {
 </div>
 <div class="header">
 <h1>would you like to make a change?</h1>
-<form action="/changes" method="post">
+<form action="/groups/changes" method="post">
 	<label class="container">Yes 
 	<input type="radio" name="radioYesNo" value="yes"/>
 	<span class="checkmark"></span>

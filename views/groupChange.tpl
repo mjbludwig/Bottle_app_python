@@ -65,7 +65,7 @@ tr:nth-child(odd) {
 <div class="header"><h1>Please enter your changes below</h1></div>
 <table>
 
-<form action="/changes-made" method="post">
+<form action="/groups/changes/changes-made" method="post">
 %for users in printUsers:
 	<tr>
 	<td><b>{{users}}</b></td> 
